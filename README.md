@@ -1,0 +1,1 @@
+# Comand line gui interface using urwid to search multiple PDFs using pdfgrep and open at relevant pages using evince
