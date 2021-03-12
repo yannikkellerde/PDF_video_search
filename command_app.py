@@ -1,10 +1,36 @@
 import urwid
 import subprocess
 import os,sys
+import pickle
+
+with open("slide_second_map.pkl","rb") as f:
+    video_map = pickle.load(f)
+with open("slide_map.pkl","rb") as f:
+    slide_map = pickle.load(f)
+
+glob_currently_selected = None
+glob_list_box = None
+glob_choices = None
 
 def exit_on_q(key):
     if key in ["q","Q"]:
-        raise urwid.ExitMainLoop()        
+        raise urwid.ExitMainLoop()  
+    if key in ["v","V"]:
+        open_video(os.path.basename(glob_currently_selected[0]),int(glob_currently_selected[1]))
+
+def open_video(pdf,page_num):
+    real_page_num = slide_map[(pdf,page_num)]
+    slides_num = int(pdf.split("-")[0])
+    for pnum in range(real_page_num,0,-1):
+        key = (slides_num,pnum)
+        if key in video_map:
+            video = video_map[key][0]
+            if pnum == real_page_num:
+                timestamp = video_map[key][1][0]
+            else:
+                timestamp = video_map[key][1][1]
+            break
+    subprocess.run(["vlc",f"--start-time={timestamp}",os.path.join("videos",f"Folien-{slides_num}",video)],stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 def program_main(pdfpath):
     while 1:
@@ -38,7 +64,13 @@ def program_main(pdfpath):
 def open_file(button, choice):
     subprocess.run(["evince","-i",choice[1],choice[0]])    
 
+def test_callback():
+    global glob_currently_selected
+    index = int(str(glob_list_box.get_focus()[1]))-2
+    glob_currently_selected = glob_choices[index]
+
 def menu(title, choices):
+    global glob_list_box, glob_choices
     body = [urwid.Text(title), urwid.Divider()]
     for c in choices:
         button = urwid.Button([
@@ -50,17 +82,15 @@ def menu(title, choices):
         ])
         urwid.connect_signal(button, 'click', open_file, c)
         body.append(urwid.AttrMap(button, None, focus_map='reversed'))
-    return urwid.ListBox(urwid.SimpleFocusListWalker(body))
+    walker = urwid.SimpleFocusListWalker(body)
+    urwid.connect_signal(walker, "modified", test_callback)
+    list_box = urwid.ListBox(walker)
+    glob_list_box = list_box
+    glob_choices = choices
+    return list_box
 
 def exit_program(button):
     raise urwid.ExitMainLoop()
 
 if __name__ == '__main__':
-    try:
-        program_main(sys.argv[1] if len(sys.argv)>1 else "folien")
-    except:
-        try:
-            os.remove(".tmp.txt")
-            pass
-        except:
-            pass
+    program_main(sys.argv[1] if len(sys.argv)>1 else "folien")
