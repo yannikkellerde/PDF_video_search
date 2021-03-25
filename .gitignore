@@ -2,3 +2,8 @@
 cropped_videos/
 images/
 videos/
+pdfs/
+.tmp.txt
+video_map.pkl
+bewegungswissenschaften/
+*.pyc
