@@ -1,5 +1,5 @@
 # Search multiple PDFs and Videos using this python script.
-This script can be highly useful to quickly look up information from lectures during an open-book exam.
+This script can be used to quickly look up information from lectures during an open-book exam.
 ## Searching through multiple PDFs
 **Requirements** 
 + OS: Linux, preferrably Ubuntu or another Debian based distro.
