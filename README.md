@@ -18,7 +18,7 @@ This script can be used to quickly look up information from lectures during an o
 ## Searching videos that show PDFs
 To search videos that show PDF Slides (For example videos of University lectures), the following conditions have to be met:
 + You have downloaded the videos as well as the PDFs
-+ The PDFs are numbered and the page number is displayed at roughly the same position in the videos (or at least the parts of the videos you care about)
++ The PDFs are numbered and the page number is displayed at roughly the same position during all videos (or at least the parts of the videos you care about)
 + Each video only shows the slides of one PDF files (Multiple videos for one PDF file is ok, but not the other way around).
 
 Store the pdfs into a folder. Then create a folder for your videos. In the videos folder, create a folder for every of your PDF files that is named like the pdf file (without the `.pdf`). Put your videos in the folder with the name of the PDF file that is shown in the video.  
